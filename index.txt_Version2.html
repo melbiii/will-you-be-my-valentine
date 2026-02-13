@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GUNDAMMA 💖</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(#f8c8dc, #f3a6c8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    transition: background 1.5s;
+}
+
+/* when we need page scroll for the heartbreak scene */
+body.sad-scroll {
+    overflow-y: auto !important;
+    align-items: flex-start !important;
+    padding-top: 40px;
+}
+
+body.sad {
+    background: radial-gradient(circle at top, #2b1a2f, #060308);
+}
+
+body.shake {
+    animation: shake 1.2s ease-in-out;
+}
+
+@keyframes shake {
+    0% { transform: translate(0); }
+    25% { transform: translate(-6px, 4px); }
+    50% { transform: translate(6px, -4px); }
+    75% { transform: translate(-4px, 3px); }
+    100% { transform: translate(0); }
+}
+
+.card {
+    background: #ffe6f0;
+    padding: 25px;
+    border-radius: 20px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    transition: background 1.5s, color 1.5s;
+    z-index: 10;
+    box-sizing: border-box;
+    max-width: 92%;
+}
+
+.card.sad-card {
+    background: #3a2a40;
+    color: #f0e6f0;
+}
+
+.romantic-name {
+    font-family: Georgia, serif;
+    color: #ff4d88;
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.bear {
+    font-size: 60px;
+}
+
+.buttons {
+    position: relative;
+    height: 120px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 12px 26px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    position: absolute;
+    cursor: pointer;
+}
+
+#yes {
+    background: #ff4d88;
+    color: white;
+    left: 20px;
+    top: 40px;
+}
+
+#no {
+    background: #ddd;
+    color: #555;
+    left: 200px;
+    top: 40px;
+}
+
+/* locked/disabled no button styling */
+button.locked,
+button[disabled] {
+    background: #bfb8bf;
+    color: #6e666e;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Rain */
+.rain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.4) 3px,
+        transparent 4px
+    );
+    animation: rainMove 0.6s linear infinite;
+}
+
+@keyframes rainMove {
+    from { background-position: 0 0; }
+    to { background-position: 0 200px; }
+}
+
+/* Heartbreak */
+.heart-container {
+    position: relative;
+    font-size: 90px;
+    width: 140px;
+    height: 120px;
+    margin: 10px auto;
+}
+
+.heart-left {
+    position: absolute;
+    left: 0;
+    animation: crackLeft 6s forwards ease-in-out;
+}
+
+.heart-right {
+    position: absolute;
+    right: 0;
+    animation: crackRight 6s forwards ease-in-out;
+}
+
+@keyframes crackLeft {
+    to {
+        transform: translate(-70px, 120px) rotate(-35deg);
+        opacity: 0;
+    }
+}
+
+@keyframes crackRight {
+    to {
+        transform: translate(70px, 120px) rotate(35deg);
+        opacity: 0;
+    }
+}
+
+.restart {
+    margin-top: 20px;
+    padding: 10px 26px;
+    border-radius: 22px;
+    background: #ff4d88;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.full-img {
+    width: 100%;
+    border-radius: 14px;
+    margin-bottom: 15px;
+}
+
+/* Final two images horizontally */
+.final-images {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 12px;
+}
+.final-images img {
+    width: calc(50% - 6px);
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+/* Fireworks / confetti container */
+.fireworks {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 9998;
+}
+
+/* If canvas fireworks are present, they fill the container */
+.fireworks canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* make card content accessible when fireworks are showing */
+.card.fireworks-visible {
+    z-index: 9999;
+    position: relative;
+}
+
+/* --- VALENTINE (Balloons + big text) overlay styles --- */
+.valentine-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10000;
+    overflow: hidden;
+    background: radial-gradient(circle at center, rgba(255, 95, 146, 0.12), rgba(255,255,255,0));
+}
+
+/* big animated text */
+.v-text {
+    font-family: 'Georgia', serif;
+    font-size: 86px; /* bigger */
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 900;
+    -webkit-text-stroke: 1px rgba(0,0,0,0.12);
+    /* slightly adjusted, attractive multicolor gradient */
+    background: linear-gradient(90deg, #ff4d88, #ff9aa2, #ffd76a, #90e0ff, #b68bff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: vPopLarge 900ms ease-out 0s 3;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* a slightly different pop for large text */
+@keyframes vPopLarge {
+    0% { transform: scale(0.5) translateY(30px); opacity: 0; filter: blur(3px); }
+    40% { transform: scale(1.08) translateY(-10px); opacity: 1; filter: blur(0px); }
+    70% { transform: scale(0.96) translateY(4px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* balloon element */
+.v-balloon {
+    position: absolute;
+    width: 48px;
+    height: 62px;
+    border-radius: 50% 50% 45% 45%;
+    transform-origin: center bottom;
+    will-change: transform, opacity, top, left;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+
+/* balloon glossy highlight */
+.v-balloon::after {
+    content: '';
+    position: absolute;
+    left: 18%;
+    top: 14%;
+    width: 26%;
+    height: 30%;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.45);
+    transform: rotate(-25deg);
+}
+
+/* balloon string */
+.v-balloon .string {
+    position: absolute;
+    bottom: -36px;
+    width: 2px;
+    height: 36px;
+    background: rgba(0,0,0,0.18);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* balloon rising animation */
+@keyframes balloonRise {
+    0% { transform: translateY(0) scale(0.9); opacity: 0; }
+    10% { opacity: 1; }
+    70% { opacity: 1; transform: translateY(-560px) scale(1.05); }
+    100% { opacity: 0; transform: translateY(-720px) scale(0.9); }
+}
+
+/* Responsive adjustments for mobile (keeps everything else unchanged) */
+@media (max-width: 480px) {
+    .v-text {
+        font-size: 34px !important; /* make the big text comfortably sized on phones */
+    }
+    .valentine-overlay {
+        padding: 8px;
+    }
+    /* ensure the fireworks canvas sits below card but still visible */
+    .fireworks { z-index: 9996; }
+    .card.fireworks-visible { z-index: 9999; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card"></div>
+
+<!-- existing voice audios -->
+<audio id="voice1" src="voice1.mp3" preload="auto" playsinline></audio>
+<audio id="voice2" src="voice2.mp3" preload="auto" playsinline></audio>
+
+<!-- yes audios (played the same way as voice1/voice2) -->
+<audio id="yesAudio1" src="yes1.mp3" preload="auto" playsinline></audio>
+<audio id="yesAudio2" src="yes2.mp3" preload="auto" playsinline></audio>
+<!-- third-yes audio -->
+<audio id="yesAudio3" src="yes3.mp3" preload="auto" playsinline></audio>
+
+<script>
+/*
+  Changes applied:
+  - Replaced DOM-heavy fireworks with a canvas-based implementation for much smoother performance on mobile.
+  - Adjusted the flow so fireworks run for 12.5s; after 7s the HAPPY VALENTINE'S DAY overlay runs for 5s while fireworks continue.
+  - Made the HAPPY VALENTINE'S DAY text gradient a bit more attractive. Balloon animation and pop animation remain unchanged.
+*/
+
+let noClickCount = 0;
+let yesClickCount = 0;       // counts Yes clicks
+let showingMessage = false;
+let heartbreakDone = false;
+let noLocked = false;        // when true, the No button is locked/disabled
+let programEnded = false;    // when true, the app stops responding (after Clear)
+
+const card = document.getElementById("card");
+const voice1 = document.getElementById("voice1");
+const voice2 = document.getElementById("voice2");
+const yesAudio1 = document.getElementById("yesAudio1");
+const yesAudio2 = document.getElementById("yesAudio2");
+const yesAudio3 = document.getElementById("yesAudio3");
+
+renderMain();
+
+/* Basic image preload helper */
+function preloadImage(src, timeoutMs = 5000) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        let timer = null;
+        img.onload = () => {
+            if (timer) clearTimeout(timer);
+            resolve(src);
+        };
+        img.onerror = () => {
+            if (timer) clearTimeout(timer);
+            reject(new Error('Image failed to load: ' + src));
+        };
+        if (timeoutMs) {
+            timer = setTimeout(() => {
+                img.onload = img.onerror = null;
+                reject(new Error('Image load timeout: ' + src));
+            }, timeoutMs);
+        }
+        img.src = src;
+    });
+}
+
+/* One-time message display helper */
+function showTempMessage(html) {
+    showingMessage = true;
+    card.innerHTML = html;
+
+    // one-time click to return to main
+    setTimeout(() => {
+        document.addEventListener('click', function closeOnce() {
+            showingMessage = false;
+            renderMain();
+            document.removeEventListener('click', closeOnce);
+        }, { once: true });
+    }, 0);
+}
+
+function renderMain() {
+    if (programEnded) return;
+    card.classList.remove("sad-card");
+    card.classList.remove("fireworks-visible");
+    card.style.visibility = 'visible';
+    card.innerHTML = `
+        <div class="romantic-name">GUNDAMMA 💖</div>
+        <div class="bear">🐻💖</div>
+        <p>Will you be my Valentine?</p>
+        ${heartbreakDone ? "" : `
+        <div class="buttons">
+            <button id="yes">Yes</button>
+            ${noLocked ? `<button id="no" class="locked" disabled>No</button>` : `<button id="no">No</button>`}
+        </div>`}
+    `;
+
+    if (!heartbreakDone) {
+        const yesBtn = document.getElementById("yes");
+        const noBtn = document.getElementById("no");
+        if (yesBtn) yesBtn.onclick = yesClicked;
+        if (noBtn && !noLocked) noBtn.onclick = handleNo;
+    }
+}
+
+function handleNo(e) {
+    if (programEnded) return;
+    e.stopPropagation();
+
+    if (noClickCount === 1) {
+        voice1.currentTime = 0;
+        voice1.play().catch(()=>{});
+    }
+
+    if (noClickCount === 2) {
+        voice2.currentTime = 0;
+        voice2.play().catch(()=>{});
+    }
+
+    if (noClickCount === 0) {
+        noClickCount++;
+        showTempMessage(`
+            <div class="romantic-name">GUNDAMMA 💖</div>
+            <img src="how.jpg" class="full-img">
+            <p><small>(Tap anywhere to continue)</small></p>
+        `);
+    }
+    else if (noClickCount === 1) {
+        noClickCount++;
+        showTempMessage(`
+            <div class="romantic-name">GUNDAMMA 💖</div>
+            <img src="second.jpg" class="full-img" alt="second image">
+            <p>
+            I know maybe it might be the worst<br>
+            i might be the worst but even though<br>
+            i wanted to try it.<br><br>
+            So your last final chance is coming right up.<br>
+            Please angeleeee no matter even if you click a NO<br>
+            i will wait until the next 14th........
+            </p>
+            <small>(Tap anywhere to continue)</small>
+        `);
+    }
+    else if (noClickCount === 2) {
+        noClickCount++;
+        heartbreakDone = true;
+        heartbreakScene();
+    }
+}
+
+/* Canvas-based fireworks for improved mobile performance */
+function launchFireworks(duration = 5000) {
+    return new Promise(resolve => {
+        const container = document.createElement('div');
+        container.className = 'fireworks';
+        document.body.appendChild(container);
+        card.classList.add('fireworks-visible');
+
+        // create canvas
+        const canvas = document.createElement('canvas');
+        container.appendChild(canvas);
+        const ctx = canvas.getContext('2d', { alpha: true });
+
+        let dpr = Math.max(1, window.devicePixelRatio || 1);
+        function resizeCanvas() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            canvas.width = Math.floor(w * dpr);
+            canvas.height = Math.floor(h * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const colors = ['#ff4d88','#ffd166','#06d6a0','#118ab2','#ef476f','#ffd54f','#a78bfa','#ffb4a2'];
+
+        // particle pool
+        let particles = [];
+        const MAX_PARTICLES = 700; // cap to avoid overdraw on mobile
+
+        function spawnBurst(cx, cy, count) {
+            for (let i = 0; i < count && particles.length < MAX_PARTICLES; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = (30 + Math.random() * 160) * (0.9 + Math.random()*0.6);
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+                const life = 600 + Math.random() * 900;
+                const size = 1.5 + Math.random()*4.5;
+                const color = colors[Math.floor(Math.random()*colors.length)];
+                particles.push({
+                    x: cx,
+                    y: cy,
+                    vx: vx,
+                    vy: vy,
+                    ax: vx * -0.0006, // slight air resistance
+                    ay: 160 + Math.random()*40, // gravity-ish
+                    life: life,
+                    age: 0,
+                    size: size,
+                    color: color,
+                    alpha: 1,
+                    flick: Math.random() < 0.25
+                });
+            }
+        }
+
+        // periodic burst generator (less DOM & lighter per-frame work than many divs)
+        const burstIntervalMs = 200;
+        const bursts = Math.max(6, Math.floor(duration / burstIntervalMs));
+        let burstCount = 0;
+        const burstTimer = setInterval(() => {
+            createBurst();
+            burstCount++;
+            if (burstCount >= bursts) {
+                clearInterval(burstTimer);
+            }
+        }, burstIntervalMs);
+
+        // create a few initial bursts
+        for (let i = 0; i < 3; i++) createBurst();
+
+        function createBurst() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const cx = (0.12 + Math.random() * 0.76) * w;
+            const cy = Math.random() * (h * 0.55);
+            const mainCount = 18 + Math.floor(Math.random() * 36);
+            spawnBurst(cx, cy, mainCount);
+
+            // sub-bursts shortly after
+            const subCount = 1 + Math.floor(Math.random()*2);
+            for (let i=0;i<subCount;i++) {
+                setTimeout(() => {
+                    const offsetX = (Math.random()-0.5) * 80;
+                    const offsetY = (Math.random()-0.5) * 80;
+                    spawnBurst(cx + offsetX, cy + offsetY, 8 + Math.floor(Math.random()*22));
+                }, 100 + Math.floor(Math.random()*220));
+            }
+            // occasional spark shower
+            if (Math.random() < 0.35) {
+                setTimeout(() => {
+                    spawnBurst(cx, cy + 20, 28 + Math.floor(Math.random()*32));
+                }, 60);
+            }
+        }
+
+        let last = performance.now();
+        let running = true;
+
+        function frame(now) {
+            const dt = Math.min(40, now - last); // clamp dt to avoid big jumps
+            last = now;
+
+            // fade canvas slightly for motion blur effect
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = 'rgba(0,0,0,0.15)';
+            ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+            ctx.globalCompositeOperation = 'lighter';
+
+            // update + draw particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.age += dt;
+                if (p.age >= p.life) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+                // simple physics
+                p.vx += p.ax * dt;
+                p.vy += (p.ay * dt) / 1000;
+                p.x += (p.vx * dt) / 1000;
+                p.y += (p.vy * dt) / 1000;
+
+                // fade out later in life
+                p.alpha = 1 - (p.age / p.life);
+
+                // draw
+                const radius = p.size;
+                ctx.beginPath();
+                // subtle flicker
+                const a = p.alpha * (p.flick ? (0.7 + Math.random() * 0.6) : 1);
+                ctx.fillStyle = hexToRgba(p.color, a);
+                ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // continue animation loop while either generating or particles exist
+            if (running || particles.length > 0) {
+                requestAnimationFrame(frame);
+            } else {
+                // tail cleared; cleanup
+                cleanupAndResolve();
+            }
+        }
+
+        // helper to convert hex color to rgba with alpha
+        function hexToRgba(hex, a) {
+            // accept #rrggbb
+            try {
+                if (hex[0] === '#') {
+                    const num = parseInt(hex.slice(1), 16);
+                    const r = (num >> 16) & 255;
+                    const g = (num >> 8) & 255;
+                    const b = num & 255;
+                    return `rgba(${r},${g},${b},${a})`;
+                }
+            } catch (e) {}
+            return hex;
+        }
+
+        // stop generating after duration but let existing particles fade out
+        setTimeout(() => {
+            running = false;
+            clearInterval(burstTimer);
+            // give particles up to 900ms to fade naturally (frame loop will exit when none left)
+            setTimeout(() => {
+                // if still particles after extra tail duration, force cleanup
+                if (particles.length === 0) {
+                    cleanupAndResolve();
+                } else {
+                    // ensure we will eventually cleanup even if some remain
+                    setTimeout(cleanupAndResolve, 1200);
+                }
+            }, 200);
+        }, duration);
+
+        let raf = requestAnimationFrame(frame);
+
+        function cleanupAndResolve() {
+            try { cancelAnimationFrame(raf); } catch(e){}
+            try { clearInterval(burstTimer); } catch(e){}
+            window.removeEventListener('resize', resizeCanvas);
+            container.remove();
+            card.classList.remove('fireworks-visible');
+            resolve();
+        }
+    });
+}
+
+/* NEW: show 7-second Valentine's balloon animation (full-screen overlay) */
+function showValentineAnimation(duration = 7000) {
+    return new Promise(resolve => {
+        const overlay = document.createElement('div');
+        overlay.className = 'valentine-overlay';
+        document.body.appendChild(overlay);
+
+        // big text in center
+        const text = document.createElement('div');
+        text.className = 'v-text';
+        text.textContent = "HAPPY VALENTINE'S DAY";
+        overlay.appendChild(text);
+
+        // detect phone / small screen & adjust sizes/counts for mobile
+        const isMobile = (window.innerWidth <= 480) || /Mobi|Android/i.test(navigator.userAgent);
+        let colors = ['#ff4d88', '#ffd166', '#06d6a0', '#118ab2', '#ef476f', '#a78bfa', '#ffb4a2', '#ffd54f'];
+        let balloonCount = isMobile ? 16 : 36; // fewer on mobile to reduce overdraw
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        if (isMobile) {
+            // ensure readable on phones
+            text.style.fontSize = '34px';
+            overlay.style.padding = '6px';
+        }
+
+        for (let i = 0; i < balloonCount; i++) {
+            const b = document.createElement('div');
+            b.className = 'v-balloon';
+            // smaller sizes on mobile
+            const size = isMobile ? (20 + Math.floor(Math.random() * 28)) : (36 + Math.floor(Math.random() * 48));
+            b.style.width = size + 'px';
+            b.style.height = Math.floor(size * 1.25) + 'px';
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            // gradient like a balloon
+            b.style.background = `linear-gradient(180deg, ${color}, ${shadeColor(color, -12)})`;
+            // initial left position spread across width (give some margin so balloons appear nicely on small screens)
+            const left = Math.random() * w;
+            const startTop = h + (Math.random() * 120); // start slightly below viewport
+            b.style.left = left + 'px';
+            b.style.top = startTop + 'px';
+            // add string
+            const s = document.createElement('div');
+            s.className = 'string';
+            b.appendChild(s);
+            overlay.appendChild(b);
+
+            // animate with random delay so they rise over the 7s window
+            const delay = Math.floor(Math.random() * Math.max(0, duration - 800));
+            const dur = (isMobile ? 3600 : 4500) + Math.floor(Math.random() * (isMobile ? 1200 : 2600)); // shorter on mobile
+            b.style.animationDelay = delay + 'ms';
+            b.style.animationDuration = dur + 'ms';
+            b.style.animationName = 'balloonRise';
+
+            // remove after it finishes (delay + dur)
+            setTimeout(() => {
+                b.remove();
+            }, delay + dur + 200);
+        }
+
+        // remove overlay and resolve after duration
+        setTimeout(() => {
+            overlay.remove();
+            resolve();
+        }, duration);
+    });
+}
+
+// small helper to darken a hex-like color (accepts #rrggbb or rgb-ish named colors)
+function shadeColor(hex, percent) {
+    // try to parse #RRGGBB
+    try {
+        if (hex[0] === '#') {
+            const num = parseInt(hex.slice(1),16);
+            let r = (num >> 16) + percent;
+            let g = ((num >> 8) & 0x00FF) + percent;
+            let b = (num & 0x0000FF) + percent;
+            r = Math.max(0, Math.min(255, r));
+            g = Math.max(0, Math.min(255, g));
+            b = Math.max(0, Math.min(255, b));
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+    } catch (e) {}
+    // fallback: return original
+    return hex;
+}
+
+/*
+ Yes click behavior updates:
+ - On the 3rd Yes click: remove/hide the panel and hide the entire card content immediately,
+   then proceed with audio -> fireworks -> valentines overlay (starts after 7s) -> final content.
+ - Other behaviors unchanged.
+*/
+function yesClicked(e) {
+    if (programEnded) return;
+    e.stopPropagation();
+    yesClickCount++;
+
+    if (yesClickCount === 1) {
+        noLocked = true;
+
+        yesAudio1.currentTime = 0;
+        yesAudio1.play().catch(()=>{});
+
+        preloadImage('yes.jpg').then(() => {
+            showTempMessage(`
+                <div class="romantic-name">Happy Valentine's 💕</div>
+                <img src="yes.jpg" class="full-img" alt="Yes image">
+                <p>
+                You know it's a trap.<br>
+                You clicked yes once now you can only click on yes.<br>
+                The no button is now locked
+                </p>
+                <p><small>(Tap anywhere to continue)</small></p>
+            `);
+        }).catch(() => {
+            showTempMessage(`
+                <div class="romantic-name">Happy Valentine's 💕</div>
+                <p>
+                You know it's a trap.<br>
+                You clicked yes once now you can only click on yes.<br>
+                The no button is now locked
+                </p>
+                <p><small>(Tap anywhere to continue)</small></p>
+            `);
+        });
+
+        return;
+    }
+
+    if (yesClickCount === 2) {
+        yesAudio2.currentTime = 0;
+        yesAudio2.play().catch(()=>{});
+
+        preloadImage('yes2.jpg').then(() => {
+            showTempMessage(`
+                <div class="romantic-name">Happy Valentine's 💕</div>
+                <img src="yes2.jpg" class="full-img" alt="Second yes image">
+                <p>
+                HEY Cutieeee, you clicked again on yes. The next one is the last.<br>
+                If you click that yes too then i become the happiest person on EARTH....
+                </p>
+                <p><small>(Tap anywhere to continue)</small></p>
+            `);
+        }).catch(() => {
+            showTempMessage(`
+                <div class="romantic-name">Happy Valentine's 💕</div>
+                <p>
+                HEY Cutieeee, you clicked again on yes. The next one is the last.<br>
+                If you click that yes too then i become the happiest person on EARTH....
+                </p>
+                <p><small>(Tap anywhere to continue)</small></p>
+            `);
+        });
+
+        return;
+    }
+
+    if (yesClickCount === 3) {
+        // remove the panel that contains yes/no immediately
+        const panel = card.querySelector('.buttons');
+        if (panel) panel.remove();
+
+        // hide entire card content so "GUNDAMMA / Will you be my Valentine?" is not visible
+        card.style.visibility = 'hidden';
+
+        // play yesAudio3 exactly like the others
+        yesAudio3.currentTime = 0;
+        yesAudio3.play().catch(()=>{});
+
+        // Run fireworks for 12.5s. After 7s (while fireworks continue) start the HAPPY VALENTINE'S DAY overlay for 5s.
+        // Do not remove fireworks when happy enters; wait for both to finish before showing final content.
+        const fireworksPromise = launchFireworks(12500); // 12.5 seconds
+        const valentinesPromise = new Promise(resolve => {
+            setTimeout(() => {
+                showValentineAnimation(5000).then(resolve); // run for 5s
+            }, 7000); // start at 7s into fireworks
+        });
+
+        Promise.all([fireworksPromise, valentinesPromise]).then(() => {
+            // restore card visibility and show final content exactly as before
+            card.style.visibility = 'visible';
+            card.classList.add("sad-card");
+            card.innerHTML = `
+                <div class="romantic-name">Happy Valentine's 💕</div>
+                <div class="final-images">
+                    <img src="final1.jpg" alt="final image 1">
+                    <img src="final2.jpg" alt="final image 2">
+                </div>
+                <p style="margin-top:14px; text-align:left;">
+                HEY Girl... I don't know you really clicked yes on purpose if yes is your final answer please let me know.<br><br>
+                Anyways i love you a lot..... Thanks for clicking yes...
+                </p>
+                <div style="margin-top:16px;">
+                    <button id="clearBtn" style="position:static; border-radius:18px; padding:10px 18px; background:#ff4d88; color:white; border:none; cursor:pointer;">Clear</button>
+                </div>
+            `;
+            const clearBtn = document.getElementById('clearBtn');
+            if (clearBtn) clearBtn.onclick = clearAndStop;
+        });
+
+        return;
+    }
+
+    // subsequent yes clicks
+    yesAudio1.currentTime = 0;
+    yesAudio1.play().catch(()=>{});
+
+    preloadImage('yes.jpg').then(() => {
+        showTempMessage(`
+            <div class="romantic-name">Happy Valentine's 💕</div>
+            <img src="yes.jpg" class="full-img" alt="Yes image">
+            <p>You chose YES 💖 (count: ${yesClickCount})</p>
+            <small>(Tap anywhere to continue)</small>
+        `);
+    }).catch(() => {
+        showTempMessage(`
+            <div class="romantic-name">Happy Valentine's 💕</div>
+            <p>You chose YES 💖 (count: ${yesClickCount})</p>
+            <small>(Tap anywhere to continue)</small>
+        `);
+    });
+}
+
+/* Heartbreak scene (unchanged except scroll fix) */
+function heartbreakScene() {
+    document.body.classList.add("sad", "shake");
+    card.classList.add("sad-card");
+
+    const rain = document.createElement("div");
+    rain.className = "rain";
+    document.body.appendChild(rain);
+
+    card.innerHTML = `
+        <div class="romantic-name">GUNDAMMA 💖</div>
+        <img src="third.jpg" class="full-img">
+        <div class="heart-container">
+            <div class="heart-left">❤️</div>
+            <div class="heart-right">❤️</div>
+        </div>
+        <p>
+            Yeah you broke my heart<br>
+            but no matter what<br>
+            still i love youuuuu….
+        </p>
+        <p><strong>
+            if you wanna click yes go all the way back and restart again
+        </strong></p>
+        <button class="restart" onclick="restart()">Restart</button>
+    `;
+
+    document.body.classList.add('sad-scroll');
+
+    setTimeout(() => {
+        const restartBtn = document.querySelector('.restart');
+        if (restartBtn) {
+            restartBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    }, 80);
+}
+
+/* Clear and stop program (no returns) */
+function clearAndStop() {
+    // mark program ended
+    programEnded = true;
+
+    // pause audios
+    try { voice1.pause(); voice1.currentTime = 0; } catch {}
+    try { voice2.pause(); voice2.currentTime = 0; } catch {}
+    try { yesAudio1.pause(); yesAudio1.currentTime = 0; } catch {}
+    try { yesAudio2.pause(); yesAudio2.currentTime = 0; } catch {}
+    try { yesAudio3.pause(); yesAudio3.currentTime = 0; } catch {}
+
+    // remove any fireworks containers that might remain
+    const fw = document.querySelectorAll('.fireworks');
+    fw.forEach(n => n.remove());
+
+    // remove valentine overlay if present
+    const v = document.querySelectorAll('.valentine-overlay');
+    v.forEach(n => n.remove());
+
+    // remove rain if present
+    const rain = document.querySelector('.rain');
+    if (rain) rain.remove();
+
+    // Replace the entire document body with a cleared state — no way back
+    document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Arial, sans-serif;"><div style="text-align:center;color:#444;"><h2>Cleared</h2><p>The page has been cleared.</p></div></div>';
+}
+
+/* Restart resets counters and pauses audio (restores original behavior) */
+function restart() {
+    if (programEnded) return;
+    noClickCount = 0;
+    heartbreakDone = false;
+    showingMessage = false;
+    yesClickCount = 0;
+    noLocked = false;
+
+    try { voice1.pause(); voice1.currentTime = 0; } catch {}
+    try { voice2.pause(); voice2.currentTime = 0; } catch {}
+    try { yesAudio1.pause(); yesAudio1.currentTime = 0; } catch {}
+    try { yesAudio2.pause(); yesAudio2.currentTime = 0; } catch {}
+    try { yesAudio3.pause(); yesAudio3.currentTime = 0; } catch {}
+
+    document.body.classList.remove("sad", "shake");
+    document.body.classList.remove('sad-scroll');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    renderMain();
+}
+</script>
+
+</body>
+</html>
